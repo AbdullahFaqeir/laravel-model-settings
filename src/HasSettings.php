@@ -83,17 +83,17 @@ trait HasSettings
     /**
      * Map settings() to another alias specified with $mapSettingsTo.
      *
-     * @param string $name
-     * @param array  $args
+     * @param $method
+     * @param $parameters
      *
      * @return mixed
      */
-    public function __call(string $name, array $args)
+    public function __call($method, $parameters)
     {
-        if (isset($this->mapSettingsTo) && $name === $this->mapSettingsTo) {
-            return $this->settings(...$args);
+        if (isset($this->mapSettingsTo) && $method === $this->mapSettingsTo) {
+            return $this->settings(...$parameters);
         }
 
-        return is_callable(['parent', '__call']) ? parent::__call($name, $args) : null;
+        return is_callable(['parent', '__call']) ? parent::__call($method, $parameters) : null;
     }
 }
