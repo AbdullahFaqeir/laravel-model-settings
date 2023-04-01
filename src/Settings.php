@@ -1,6 +1,6 @@
 <?php
 
-namespace Cklmercer\ModelSettings;
+namespace AbdullahFaqeir\ModelSettings;
 
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +10,7 @@ class Settings
     /**
      * @var Model
      */
-    protected $model;
+    protected Model $model;
 
     /**
      * Settings constructor.
@@ -36,11 +36,12 @@ class Settings
      * Apply the model's settings.
      *
      * @param array $settings
+     *
      * @return $this
      */
-    public function apply($settings = []): self
+    public function apply(array $settings = []): self
     {
-        $this->model->settings = (array) $settings;
+        $this->model->settings = $settings;
         $this->model->save();
 
         return $this;
@@ -50,9 +51,10 @@ class Settings
      * Delete the setting at the given path.
      *
      * @param string|null $path
+     *
      * @return self
      */
-    public function delete($path = null): self
+    public function delete(?string $path = null): self
     {
         if (!$path) {
             return $this->set([]);
@@ -69,7 +71,9 @@ class Settings
      * Forget the setting at the given path.
      *
      * @alias delete()
+     *
      * @param null $path
+     *
      * @return self
      */
     public function forget($path = null): self
@@ -85,7 +89,7 @@ class Settings
      *
      * @return mixed
      */
-    public function get($path = null, $default = null)
+    public function get(?string $path = null, mixed $default = null): mixed
     {
         return $path ? Arr::get($this->all(), $path, $default) : $this->all();
     }
@@ -97,20 +101,20 @@ class Settings
      *
      * @return bool
      */
-    public function has($path): bool
+    public function has(string $path): bool
     {
-        return (bool) Arr::has($this->all(), $path);
+        return Arr::has($this->all(), $path);
     }
 
     /**
      * Update the setting at given path to the given value.
      *
-     * @param string|null $path
-     * @param mixed       $value
+     * @param string|mixed|null $path
+     * @param mixed             $value
      *
      * @return self
      */
-    public function set($path = null, $value = []): self
+    public function set(mixed $path = null, mixed $value = []): self
     {
         if (func_num_args() < 2) {
             $value = $path;
@@ -134,7 +138,7 @@ class Settings
      *
      * @return self
      */
-    public function update($path, $value): self
+    public function update(string $path, mixed $value): self
     {
         return $this->set($path, $value);
     }

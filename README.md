@@ -1,16 +1,21 @@
 # laravel-model-settings
+
 Simple yet flexible settings for your Laravel models.
 
 _Note: I will be updating this plugin in the near future to better match the API of the new `cache()` helper method that has been introduced in Laravel 5.3_
 
 ## Installation
+
 ##### 1.) Install via composer
+
 ```bash
-composer require cklmercer/laravel-model-settings
+composer require abdullahfaqeir/laravel-model-settings
 ```
 
 ##### 2.) Add a JSON settings field to your model's migration.
-_create_users_table.php_ 
+
+_create_users_table.php_
+
 ```php
 Schema::create('users', function (Blueprint $table) {
     $table->increments('id');
@@ -23,10 +28,12 @@ Schema::create('users', function (Blueprint $table) {
 });
 ```
 
-##### 3.) Use the trait `Cklmercer\ModelSettings\HasSettings` within your model.
+##### 3.) Use the trait `AbdullahFaqeir\ModelSettings\HasSettings` within your model.
+
 _User.php_
+
 ```php
-use Cklmercer\ModelSettings\HasSettings;
+use AbdullahFaqeir\ModelSettings\HasSettings;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable 
@@ -38,7 +45,9 @@ class User extends Authenticatable
 ```
 
 ## Usage
+
 ##### 1.) Get all of the model's settings.
+
 ```php
 $user = App\User::first();
 
@@ -47,6 +56,7 @@ $user->settings()->get(); // Returns an array of the user's settings.
 ```
 
 ##### 2.) Get a specific setting.
+
 ```php
 $user = App\User::first();
 
@@ -56,6 +66,7 @@ $user->settings('some.setting'); // Quicker access.
 ```
 
 ##### 3.) Add or update a setting.
+
 ```php
 $user = App\User::first();
 
@@ -64,6 +75,7 @@ $user->settings()->update('some.setting', 'new value');
 ```
 
 ##### 4.) Determine if the model has a specific setting.
+
 ```php
 $user = App\User::first();
 
@@ -71,6 +83,7 @@ $user->settings()->has('some.setting');
 ```
 
 ##### 5.) Remove a setting from a model.
+
 ```php
 $user = App\User::first();
 
@@ -80,12 +93,13 @@ $user->settings()->forget('some.setting');
 
 ##### 6.) Set the default settings for a new model.
 
-If you define `$defaultSettings` as an array property on your model, we will use its value as the default settings for 
+If you define `$defaultSettings` as an array property on your model, we will use its value as the default settings for
 any new models that are created *without* settings.
 
 _User.php_
+
 ```php
-use Cklmercer\ModelSettings\HasSettings;
+use AbdullahFaqeir\ModelSettings\HasSettings;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable 
@@ -107,12 +121,13 @@ class User extends Authenticatable
 
 ##### 7.) Specify the settings that are allowed.
 
-If you define `$allowedSettings` as an array property then only settings which match a value within 
+If you define `$allowedSettings` as an array property then only settings which match a value within
 the `$allowedSettings` array will be saved on the model.
 
 _User.php_
+
 ```php
-use Cklmercer\ModelSettings\HasSettings;
+use AbdullahFaqeir\ModelSettings\HasSettings;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable 
@@ -135,8 +150,9 @@ class User extends Authenticatable
 If you prefer to use another name other than `settings` , you can do so by defining a `$mapSettingsTo` property. This simply maps calls to the method (such as `config()`) to the `settings()` method.
 
 _User.php_
+
 ```php
-use Cklmercer\ModelSettings\HasSettings;
+use AbdullahFaqeir\ModelSettings\HasSettings;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable 
@@ -155,4 +171,5 @@ class User extends Authenticatable
 ```
 
 ## License
+
 [MIT](http://opensource.org/licenses/MIT)

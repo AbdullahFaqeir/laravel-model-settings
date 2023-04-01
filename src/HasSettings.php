@@ -1,9 +1,13 @@
 <?php
 
-namespace Cklmercer\ModelSettings;
+namespace AbdullahFaqeir\ModelSettings;
 
 use Illuminate\Support\Arr;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Model
+ * @property array settings
+ */
 trait HasSettings
 {
     /**
@@ -11,15 +15,15 @@ trait HasSettings
      *
      * @return void
      */
-    public static function bootHasSettings()
+    public static function bootHasSettings(): void
     {
-        self::creating(function ($model) {
+        self::creating(static function (self $model) {
             if (!$model->settings) {
                 $model->settings = $model->getDefaultSettings();
             }
         });
 
-        self::saving(function ($model) {
+        self::saving(static function (self $model) {
             if ($model->settings && property_exists($model, 'allowedSettings') && is_array($model->allowedSettings)) {
                 $model->settings = Arr::only($model->settings, $model->allowedSettings);
             }
@@ -31,33 +35,35 @@ trait HasSettings
      *
      * @return array
      */
-    public function getDefaultSettings()
+    public function getDefaultSettings(): array
     {
-        return (isset($this->defaultSettings) && is_array($this->defaultSettings))
-            ? $this->defaultSettings
-            : [];
+        return (isset($this->defaultSettings) && is_array($this->defaultSettings)) ? $this->defaultSettings : [];
     }
 
     /**
      * Get the settings attribute.
      *
-     * @param json $settings
+     * @param string $settings
+     *
      * @return mixed
+     * @throws \JsonException
      */
-    public function getSettingsAttribute($settings)
+    public function getSettingsAttribute(string $settings): mixed
     {
-        return json_decode($settings, true);
+        return json_decode($settings, true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
      * Set the settings attribute.
      *
-     * @param  $settings
+     * @param array $settings
+     *
      * @return void
+     * @throws \JsonException
      */
-    public function setSettingsAttribute($settings)
+    public function setSettingsAttribute(array $settings): void
     {
-        $this->attributes['settings'] = json_encode($settings);
+        $this->attributes['settings'] = json_encode($settings, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -65,28 +71,29 @@ trait HasSettings
      *
      * @param string|null $key
      * @param mixed|null  $default
-     * @return Settings
+     *
+     * @return \AbdullahFaqeir\ModelSettings\Settings|mixed
      */
-    public function settings($key = null, $default = null)
+    public function settings(?string $key = null, mixed $default = null): mixed
     {
-        return $key ? $this->settings()->get($key, $default) : new Settings($this);
+        return $key ? $this->settings()
+                           ->get($key, $default) : new Settings($this);
     }
 
     /**
      * Map settings() to another alias specified with $mapSettingsTo.
-     * 
+     *
      * @param string $name
-     * @param array $args
+     * @param array  $args
+     *
      * @return mixed
      */
-    public function __call($name, $args)
+    public function __call(string $name, array $args)
     {
-        if (isset($this->mapSettingsTo) && $name == $this->mapSettingsTo) {
+        if (isset($this->mapSettingsTo) && $name === $this->mapSettingsTo) {
             return $this->settings(...$args);
         }
 
-        return is_callable(['parent', '__call'])
-            ? parent::__call($name, $args)
-            : null;
+        return is_callable(['parent', '__call']) ? parent::__call($name, $args) : null;
     }
 }
