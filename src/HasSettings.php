@@ -43,12 +43,12 @@ trait HasSettings
     /**
      * Get the settings attribute.
      *
-     * @param string $settings
+     * @param string|null $settings
      *
      * @return mixed
      * @throws \JsonException
      */
-    public function getSettingsAttribute(string $settings): mixed
+    public function getSettingsAttribute(?string $settings): mixed
     {
         return json_decode($settings, true, 512, JSON_THROW_ON_ERROR);
     }
@@ -56,12 +56,12 @@ trait HasSettings
     /**
      * Set the settings attribute.
      *
-     * @param array $settings
+     * @param array|null $settings
      *
      * @return void
      * @throws \JsonException
      */
-    public function setSettingsAttribute(array $settings): void
+    public function setSettingsAttribute(?array $settings): void
     {
         $this->attributes['settings'] = json_encode($settings, JSON_THROW_ON_ERROR);
     }
