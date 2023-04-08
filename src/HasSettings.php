@@ -2,6 +2,7 @@
 
 namespace AbdullahFaqeir\ModelSettings;
 
+use JsonException;
 use Illuminate\Support\Arr;
 
 /**
@@ -46,11 +47,14 @@ trait HasSettings
      * @param string|null $settings
      *
      * @return mixed
-     * @throws \JsonException
      */
     public function getSettingsAttribute(?string $settings): mixed
     {
-        return json_decode($settings, true, 512, JSON_THROW_ON_ERROR);
+        try {
+            return json_decode($settings, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            return [];
+        }
     }
 
     /**
@@ -59,11 +63,14 @@ trait HasSettings
      * @param array|null $settings
      *
      * @return void
-     * @throws \JsonException
      */
     public function setSettingsAttribute(?array $settings): void
     {
-        $this->attributes['settings'] = json_encode($settings, JSON_THROW_ON_ERROR);
+        try {
+            $this->attributes['settings'] = json_encode($settings, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            $this->attributes['settings'] = '{}';
+        }
     }
 
     /**
